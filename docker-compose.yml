@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: auth_system
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      JWT_SECRET: your_jwt_secret_key
+      DB_HOST: db
+      DB_USER: postgres
+      DB_PASS: postgres
+      DB_NAME: auth_system
+      DB_PORT: 5432
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+
+volumes:
+  db-data:
